@@ -39,7 +39,7 @@
         size="mini"
         plain
         @click="reset"
-      >重置</el-button>
+      >停止</el-button>
     </el-button-group>
   </div>
 </template>
@@ -91,13 +91,10 @@ export default {
     },
     refreshPomodroidoInfo() {
       this.background.pomodroidoInfo().then((info) => {
-        console.log('info: ', info);
-        console.log(new Date().getTime());
         this.setMinute = info.setMinute
         this.working = info.working
         this.minute = info.minute
         this.second = info.second
-        console.log('this.second: ', this.second);
       })
     }
   },

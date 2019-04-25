@@ -23,3 +23,22 @@ export function setStorage(obj, fn) {
 export function getStorage(obj, fn) {
     chrome.storage.sync.get(obj, fn)
 }
+
+/**
+ * @description: 发送信息给当前页面的conten.js
+ * @param {type} 
+ * @return: 
+ */
+export function sendMessageToContentScript(message, callback) {
+    window.chrome.tabs.query({
+        active: true
+    }, function(tabs) {
+        console.log('active tabs: ', tabs);
+        console.log('send');
+        tabs.forEach((tab) => {
+            window.chrome.tabs.sendMessage(tab.id, message, function(response) {
+                if (callback) callback(response);
+            });
+        })
+    });
+}

@@ -1,0 +1,17 @@
+.pomodroido-finish-bg {
+    animation: backgroundChange 2s 3;
+}
+
+@keyframes backgroundChange {
+    0% {
+        background: initial;
+    }
+
+    50% {
+        background: #F56C6C;
+    }
+
+    100% {
+        background: initial;
+    }
+}

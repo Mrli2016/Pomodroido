@@ -9,7 +9,7 @@ function resolve(dir) {
 // Generate pages object
 const pagesObj = {};
 
-const chromeName = ["popup", "options", "background"];
+const chromeName = ["popup", "options", "background", "content_script"];
 
 chromeName.forEach(name => {
   pagesObj[name] = {
@@ -39,6 +39,10 @@ module.exports = {
       CopyWebpackPlugin([
         manifest,
         {
+          from: path.resolve("src/styles/content.css"),
+          to: `${path.resolve("dist")}/styles/content.css`
+        },
+        {
           from: path.resolve("src/assets/icons"),
           to: `${path.resolve("dist")}/assets/icons`
         },
@@ -51,10 +55,12 @@ module.exports = {
       // new webpack.HashedModuleIdsPlugin(),
       // // enable scope hoisting
       // new webpack.optimize.ModuleConcatenationPlugin(),
-    ]
+    ],
+    output: {
+      filename: "js/[name].js"
+    }
   },
   chainWebpack: config => {
     config.resolve.alias.set('@', resolve('src'))
-    config.output.chunkFilename(`js/[name].js`)
   }
 };

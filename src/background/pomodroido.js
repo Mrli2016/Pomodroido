@@ -32,16 +32,19 @@ export default class Pomodroido {
 
     /**
      * @description: 开始
-     * @param {type} 
+     * @param {
+     *  finishFn: 完成回调函数（可选）
+     * } 
      * @return: 
      */
-    start() {
+    start(finishFn) {
         if (!this.minute) return
         this.working = true
         this.timer = setInterval(() => {
             if (this.second === 0) {
                 if (this.minute === 0) {
                     this.pause()
+                    if (typeof finishFn === 'function') finishFn()
                 } else {
                     this.minute -= 1
                     this.second = 59
@@ -54,12 +57,15 @@ export default class Pomodroido {
 
     /**
      * @description: 暂停
-     * @param {type} 
+     * @param {
+     * pauseFn: 暂停回调方法（可选）
+     * } 
      * @return: 
      */
-    pause() {
+    pause(pauseFn) {
         this.working = false
         clearInterval(this.timer)
+        if (typeof pauseFn === 'function') pauseFn()
     }
 
     /**

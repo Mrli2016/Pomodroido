@@ -1,6 +1,7 @@
 import {
   notification,
-  getStorage
+  getStorage,
+  sendMessageToContentScript
 } from '@/utils'
 
 import Pomodroido from './pomodroido'
@@ -22,11 +23,24 @@ window.chrome.runtime.onInstalled.addListener(function(details) {
 
 var pomodroido // 番茄钟实例变量
 
-
 window.start = function(minute) {
   // 开始计时
   pomodroido = new Pomodroido(minute)
-  pomodroido.start()
+  pomodroido.start(() => {
+    // 发送信息给content
+    sendMessageToContentScript({
+      act: 'pomodroido',
+      data: 'finish'
+    })
+
+    notification(new Date().getTime().toString(), {
+      type: 'basic',
+      iconUrl: 'assets/icons/48.png',
+      title: '休息时间到啦！',
+      priority: 2,
+      message: '先休息一下放松心情'
+    })
+  })
 }
 
 window.reset = function() {
@@ -34,7 +48,7 @@ window.reset = function() {
 }
 
 window.pomodroidoInfo = function() {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     if (pomodroido) {
       resolve(pomodroido.pomodroidoInfo())
     } else {
