@@ -1,0 +1,58 @@
+// color
+// 主色（iView 使用较为安全的蓝色作为主色调，其中 Light Primary 常用于 hover，Dark Primary 常用于 active。）
+$primary: #2d8cf0;
+$primary-light: #5cadff;
+$primary-dark: #2b85e4;
+
+// 辅助色
+$black: #333;
+
+$gray: #657180;
+
+$danger: #F56C6C;
+
+$warning: #E6A23C;
+
+$success: #67C23A;
+
+$gray-bg: #f8f8f9;
+$gray-border: #dcdee2;
+
+$danger-bg: #ffefe6;
+$danger-border: #ffb08f;
+
+$primary-bg: #f0faff;
+$primary-border: #abdcff;
+
+$warning-bg: #fff9e6;
+$warning-border: #ffd77a;
+
+$success-bg: #edfff3;
+$success-border: #8ce6b0;
+
+
+//sidebar
+$menuText:#303133;
+$menuActiveText:#409eff;
+$subMenuActiveText:#409eff; //https://github.com/ElemeFE/element/issues/12951
+
+$menuBg:#fff;
+$menuHover:#ecf5ff;
+
+$subMenuBg:#fff;
+$subMenuHover:#ecf5ff;
+
+$sideBarWidth: 210px;
+
+// the :export directive is the magic sauce for webpack
+// https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
+:export {
+  menuText: $menuText;
+  menuActiveText: $menuActiveText;
+  subMenuActiveText: $subMenuActiveText;
+  menuBg: $menuBg;
+  menuHover: $menuHover;
+  subMenuBg: $subMenuBg;
+  subMenuHover: $subMenuHover;
+  sideBarWidth: $sideBarWidth;
+}

@@ -1,0 +1,147 @@
+@import './variables.scss';
+@import './mixin.scss';
+
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+}
+
+label {
+  font-weight: 700;
+}
+
+html {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+#app {
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+a,
+a:focus,
+a:hover {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+a {
+  color: $primary;
+
+  &:focus,
+  &:hover {
+    color: $primary-dark;
+  }
+}
+
+div:focus {
+  outline: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.pull {
+  &-left {
+    float: left;
+  }
+
+  &-right {
+    float: right;
+  }
+}
+
+.clearfix {
+  &:after {
+    visibility: hidden;
+    display: block;
+    font-size: 0;
+    content: " ";
+    clear: both;
+    height: 0;
+  }
+}
+
+// 常用样式
+.inline-block {
+  display: inline-block;
+}
+
+// 图标样式复写
+[class^="el-icon-my"],
+[class*=" el-icon-my"] {
+  font-family: "iconfont" !important;
+
+  /* 以下内容参照第三方图标库本身的规则 */
+  font-size: inherit;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.iconfont {
+  font-size: inherit;
+}
+
+// 常用距离
+@each $size in (5, 10, 15) {
+
+  @each $name,
+  $side in (l, left),
+  (r, right),
+  (t, top),
+  (b, bottom) {
+    .p {
+      &-#{$name}-#{$size} {
+        padding-#{$side}: #{$size}px;
+      }
+    }
+
+    .m {
+      &-#{$name}-#{$size} {
+        margin-#{$side}: #{$size}px;
+      }
+    }
+  }
+}
+
+.text {
+
+  // 文本基本样式
+  &-center {
+    // 居中
+    text-align: center;
+  }
+
+  &-danger {
+    color: $danger;
+  }
+
+  &-success {
+    color: $success;
+  }
+
+  &-warning {
+    color: $warning;
+  }
+
+  &-primary {
+    color: $primary;
+  }
+
+  &-gray {
+    color: $gray
+  }
+}
