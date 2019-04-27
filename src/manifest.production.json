@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "番茄钟-劳逸结合提高工作效率",
-    "description": "番茄工作法是简单易行的时间管理方法，设一段约25分钟的时间专注工作，中途不允许做任何与该任务无关的事，时间结束后短暂休息一下（5分钟就行），每4个番茄时段多休息一会儿。",
+    "description": "番茄工作法是简单易行的时间管理方法，设一段约25分钟的时间专注工作，时间结束后短暂休息一下（5分钟就行），每4个番茄时段多休息一会儿。",
     "version": "1.0.0",
     "icons": {
         "16": "./assets/icons/16.png",
@@ -22,7 +22,6 @@
         "webRequestBlocking",
         "*://*.baidu.com/*"
     ],
-    "options_page": "options.html",
     "browser_action": {
         "default_icon": "./assets/icons/16.png",
         "default_popup": "popup.html",

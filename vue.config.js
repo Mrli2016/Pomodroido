@@ -9,7 +9,7 @@ function resolve(dir) {
 // Generate pages object
 const pagesObj = {};
 
-const chromeName = ["popup", "options", "background", "content_script"];
+const chromeName = ["popup", "background", "content_script"];
 
 chromeName.forEach(name => {
   pagesObj[name] = {

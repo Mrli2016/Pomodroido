@@ -84,8 +84,6 @@ export default class Pomodroido {
                         working_times_history: this.working_times_history,
                         working_time_history: this.working_time_history
                     })
-                    console.log('this.working_times_history: ', this.working_times_history);
-                    console.log('this.working_time_history: ', this.working_time_history);
                     this.pause()
                     this.relax()
 

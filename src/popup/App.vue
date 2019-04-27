@@ -1,10 +1,5 @@
 <template>
   <div class="main_app">
-    <!-- <vue-clock
-      class="m-b-15"
-      :border="clockOption.border"
-      :number="clockOption.number"
-    ></vue-clock> -->
     <h3 class="text-primary">工作次数: {{ working_times}} </h3>
     <div :class="{sandglass: true, working: working}">
       <span class="minute m-b-15">{{ minute }}</span>

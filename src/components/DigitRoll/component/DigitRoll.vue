@@ -60,7 +60,7 @@ export default {
 
   data() {
     const { rollDigits, flipStra } = this;
-    console.log('rollDigits: ', rollDigits);
+
     const divList = arrayFromCache(10).map((n, i) => `<div>${i}</div>`);
     let executeStra = null;
 
@@ -318,7 +318,7 @@ export default {
   },
 
   created() {
-    console.log('rollDigits', this.rollDigits);
+
     this.resetStat(this.digits.length);
     /** 警告：单元测试设置，请勿自己设置，影响属性判断 */
     if (this.$attrs && this.$attrs.unitTest) {
@@ -332,8 +332,8 @@ export default {
   },
 
   mounted() {
-    console.log('rollDigits', this.rollDigits);
-    console.log('this.digits: ', this.digits);
+
+
     const $list = this.$refs.list;
 
     this.cellHeight = getHeight($list.querySelector('.d-roll-bar>div'));
