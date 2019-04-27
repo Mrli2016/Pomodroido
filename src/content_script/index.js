@@ -1,4 +1,6 @@
+console.log('content');
 window.chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    console.log('request: ', request);
     if (request.act == 'pomodroido') {
         if (request.data === 'workEnd') {
             let target = $('body')

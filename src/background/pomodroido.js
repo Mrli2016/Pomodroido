@@ -4,7 +4,12 @@ import {
 } from '@/utils'
 
 export default class Pomodroido {
-    constructor(working_time, relax_time) {
+    constructor({
+        working_time = 25,
+        relax_time = 5,
+        workEndFn = null,
+        relaxEndFn = null
+    } = {}) {
 
         this.running = false // 是否运行中
         this.timer = null // setInterval id
@@ -16,6 +21,9 @@ export default class Pomodroido {
         this.working_times = 0 // 工作次数
         this.working_times_history = 0 // 总工作次数历史
         this.working_time_history = 0 // 总工作时间
+
+        this.workEndFn = workEndFn // 工作结束回调方法
+        this.relaxEndFn = relaxEndFn // 放松时间结束回调方法
 
         // 保存工作时间
         setStorage({
@@ -29,9 +37,7 @@ export default class Pomodroido {
             working_time_history: 0
         }, (item) => {
             this.working_times_history = item.working_times_history
-            console.log('this.working_times_history: ', this.working_times_history);
             this.working_time_history = item.working_time_history
-            console.log('this.working_time_history: ', this.working_time_history);
         })
     }
 
@@ -55,11 +61,10 @@ export default class Pomodroido {
     /**
      * @description: 开始
      * @param {
-     *  finishFn: 完成回调函数（可选）
      * } 
      * @return: 
      */
-    start(finishFn, relaxEndFn) {
+    start() {
         if (!this.working_time) return
         this.running = true
         this.working = true
@@ -79,10 +84,12 @@ export default class Pomodroido {
                         working_times_history: this.working_times_history,
                         working_time_history: this.working_time_history
                     })
+                    console.log('this.working_times_history: ', this.working_times_history);
+                    console.log('this.working_time_history: ', this.working_time_history);
                     this.pause()
-                    this.relax(relaxEndFn)
+                    this.relax()
 
-                    if (typeof finishFn === 'function') finishFn()
+                    if (typeof this.workEndFn === 'function') this.workEndFn()
                 } else {
                     this.minute -= 1
                     this.second = 59
@@ -93,7 +100,12 @@ export default class Pomodroido {
         }, 1000);
     }
 
-    relax(relaxEndFn) {
+    /**
+     * @description: 休息
+     * @param {type} 
+     * @return: 
+     */
+    relax() {
         this.minute = this.relax_time
         this.second = 0
 
@@ -103,7 +115,7 @@ export default class Pomodroido {
                     this.pause()
                     this.start()
 
-                    if (typeof relaxEndFn === 'function') relaxEndFn()
+                    if (typeof this.relaxEndFn === 'function') this.relaxEndFn()
                 } else {
                     this.minute -= 1
                     this.second = 59
@@ -117,13 +129,11 @@ export default class Pomodroido {
     /**
      * @description: 暂停
      * @param {
-     * pauseFn: 暂停回调方法（可选）
      * } 
      * @return: 
      */
-    pause(pauseFn) {
+    pause() {
         clearInterval(this.timer)
-        if (typeof pauseFn === 'function') pauseFn()
     }
 
     /**

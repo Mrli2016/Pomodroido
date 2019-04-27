@@ -25,36 +25,41 @@ var pomodroido // 番茄钟实例变量
 
 window.start = function(working_time, relax_time) {
   // 开始计时
-  pomodroido = new Pomodroido(working_time, relax_time)
-  pomodroido.start(() => {
-    // 发送信息给content
-    sendMessageToContentScript({
-      act: 'pomodroido',
-      data: 'workEnd'
-    })
+  pomodroido = new Pomodroido({
+    working_time,
+    relax_time,
+    workEndFn: () => {
+      // 发送信息给content
+      sendMessageToContentScript({
+        act: 'pomodroido',
+        data: 'workEnd'
+      })
 
-    notification(new Date().getTime().toString(), {
-      type: 'basic',
-      iconUrl: 'assets/icons/48.png',
-      title: '休息时间到啦！',
-      priority: 2,
-      message: '先休息一下放松心情'
-    })
-  }, () => {
-    // 发送信息给content
-    sendMessageToContentScript({
-      act: 'pomodroido',
-      data: 'relaxEnd'
-    })
+      notification(new Date().getTime().toString(), {
+        type: 'basic',
+        iconUrl: 'assets/icons/48.png',
+        title: '休息时间到啦！',
+        priority: 2,
+        message: '先休息一下放松心情'
+      })
+    },
+    relaxEndFn: () => {
+      // 发送信息给content
+      sendMessageToContentScript({
+        act: 'pomodroido',
+        data: 'relaxEnd'
+      })
 
-    notification(new Date().getTime().toString(), {
-      type: 'basic',
-      iconUrl: 'assets/icons/48.png',
-      title: '休息结束啦！',
-      priority: 2,
-      message: '准备进入工作状态'
-    })
+      notification(new Date().getTime().toString(), {
+        type: 'basic',
+        iconUrl: 'assets/icons/48.png',
+        title: '休息结束啦！',
+        priority: 2,
+        message: '准备进入工作状态'
+      })
+    }
   })
+  pomodroido.start()
 }
 
 window.reset = function() {
