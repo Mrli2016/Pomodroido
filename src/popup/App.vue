@@ -5,9 +5,11 @@
       :border="clockOption.border"
       :number="clockOption.number"
     ></vue-clock> -->
-    <div class="sandglass">
-      <span class="minute">{{ minute }}</span>
+    <h3 class="text-primary">工作次数: {{ working_times}} </h3>
+    <div :class="{sandglass: true, working: working}">
+      <span class="minute m-b-15">{{ minute }}</span>
       <digit-roll
+        v-if="working"
         class="second"
         ref='digitroll'
         :rollDigits="second"
@@ -15,17 +17,11 @@
         :dur="500"
       >
       </digit-roll>
-    </div>
-    <div class="m-t-15">
-      <span style="line-height: 2;">工作时长(分钟)：</span>
-      <el-input-number
-        size="mini"
-        :min="0"
-        :max="60"
-        :disabled="this.working"
-        @change="changeMinute = true"
-        v-model="setMinute"
-      ></el-input-number>
+      <div
+        v-else
+        class="text-primary"
+        style="font-size: 14px;"
+      >休息中</div>
     </div>
     <el-button-group class="m-t-15">
       <el-button
@@ -41,6 +37,26 @@
         @click="reset"
       >停止</el-button>
     </el-button-group>
+    <div class="m-t-15">
+      <span style="line-height: 2;">工作时长：</span>
+      <el-input-number
+        size="mini"
+        :min="0"
+        :max="60"
+        :disabled="this.running"
+        v-model="working_time"
+      ></el-input-number>
+    </div>
+    <div class="m-t-15">
+      <span style="line-height: 2;">休息时长：</span>
+      <el-input-number
+        size="mini"
+        :min="0"
+        :max="60"
+        :disabled="this.running"
+        v-model="relax_time"
+      ></el-input-number>
+    </div>
   </div>
 </template>
 
@@ -54,16 +70,19 @@ export default {
   data() {
     return {
       background: window.chrome.extension.getBackgroundPage(),
-      setMinute: 0,
+      running: false,
+      working_time: 25,
+      relax_time: 5,
       minute: 0,
       second: 0,
       end: false,
       working: false,
-      timer: null
+      timer: null,
+      working_times: 0
     }
   },
   watch: {
-    working: function(val) {
+    running: function(val) {
       if (val) {
         this.timer = setInterval(() => {
           this.refreshPomodroidoInfo()
@@ -75,15 +94,18 @@ export default {
   },
   methods: {
     start() {
-      this.background.start(this.setMinute)
+      this.background.start(this.working_time, this.relax_time)
+      this.running = true
       this.working = true
-      this.minute = this.setMinute
+      this.minute = this.minute || this.working_time
     },
     reset() {
-      this.background.reset()
-      this.minute = this.setMinute
-      this.second = 0
+      this.running = false
       this.working = false
+      this.minute = this.working_time
+      this.second = 0
+
+      this.background.reset()
       // 因组件渲染有延迟，需进行hack处理
       setTimeout(() => {
         this.$refs.digitroll.setDigit(this.second)
@@ -91,35 +113,47 @@ export default {
     },
     refreshPomodroidoInfo() {
       this.background.pomodroidoInfo().then((info) => {
-        this.setMinute = info.setMinute
-        this.working = info.working
-        this.minute = info.minute
-        this.second = info.second
+        for (let i in info) {
+          this[i] = info[i]
+        }
       })
     }
   },
-  mounted() {
+  created() {
     this.refreshPomodroidoInfo()
   }
 }
 </script>
 
 <style lang="scss">
-@keyframes clockShadow {
+@import "src/styles/variables.scss";
+@keyframes workingShadow {
   0% {
-    box-shadow: 0px 3px 3px #409eff;
+    box-shadow: 0px 3px 5px $primary;
   }
   25% {
-    box-shadow: -3px 0px 3px #409eff;
+    box-shadow: -3px 0px 5px $primary;
   }
   50% {
-    box-shadow: 0px -3px 3px #409eff;
+    box-shadow: 0px -3px 5px $primary;
   }
   75% {
-    box-shadow: 3px 0px 3px #409eff;
+    box-shadow: 3px 0px 5px $primary;
   }
   100% {
-    box-shadow: 0px 3px 3px #409eff;
+    box-shadow: 0px 3px 5px $primary;
+  }
+}
+
+@keyframes relaxShadow {
+  0% {
+    box-shadow: 0px 0px 5px 3px $primary;
+  }
+  50% {
+    box-shadow: 0px 0px 10px 5px $primary-dark;
+  }
+  100% {
+    box-shadow: 0px 0px 5px 3px $primary;
   }
 }
 
@@ -141,8 +175,12 @@ export default {
     text-align: center;
     font-size: 14px;
     box-shadow: 3px 3px 3px #409eff;
-    animation: clockShadow 3s infinite;
+    animation: relaxShadow 3s infinite;
     animation-timing-function: linear;
+
+    &.working {
+      animation: workingShadow 3s infinite;
+    }
 
     .minute {
       display: inline-block;
@@ -153,7 +191,7 @@ export default {
 
     .second {
       width: 40px;
-      margin: 10px auto;
+      margin: 0 auto;
 
       .d-roll-list {
         background: #409eff;

@@ -23,14 +23,14 @@ window.chrome.runtime.onInstalled.addListener(function(details) {
 
 var pomodroido // 番茄钟实例变量
 
-window.start = function(minute) {
+window.start = function(working_time, relax_time) {
   // 开始计时
-  pomodroido = new Pomodroido(minute)
+  pomodroido = new Pomodroido(working_time, relax_time)
   pomodroido.start(() => {
     // 发送信息给content
     sendMessageToContentScript({
       act: 'pomodroido',
-      data: 'finish'
+      data: 'workEnd'
     })
 
     notification(new Date().getTime().toString(), {
@@ -39,6 +39,20 @@ window.start = function(minute) {
       title: '休息时间到啦！',
       priority: 2,
       message: '先休息一下放松心情'
+    })
+  }, () => {
+    // 发送信息给content
+    sendMessageToContentScript({
+      act: 'pomodroido',
+      data: 'relaxEnd'
+    })
+
+    notification(new Date().getTime().toString(), {
+      type: 'basic',
+      iconUrl: 'assets/icons/48.png',
+      title: '休息结束啦！',
+      priority: 2,
+      message: '准备进入工作状态'
     })
   })
 }
@@ -53,25 +67,11 @@ window.pomodroidoInfo = function() {
       resolve(pomodroido.pomodroidoInfo())
     } else {
       getStorage({
-        'working_time': 0
+        working_time: 25,
+        relax_time: 5
       }, (item) => {
-        if (item.working_time > 0) {
-          console.log('new', new Date().getTime());
-          pomodroido = new Pomodroido(item.working_time)
-          resolve({
-            setMinute: item.working_time,
-            working: false,
-            minute: item.working_time,
-            second: 0
-          })
-        } else {
-          resolve({
-            setMinute: 0,
-            working: false,
-            minute: 0,
-            second: 0
-          })
-        }
+        pomodroido = new Pomodroido(item.working_time, item.relax_time)
+        resolve(pomodroido.pomodroidoInfo())
       })
     }
   })

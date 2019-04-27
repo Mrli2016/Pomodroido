@@ -1,14 +1,32 @@
-.pomodroido-finish-bg {
-    animation: backgroundChange 2s 3;
+.pomodroido-work-end-bg {
+    animation: workEndBg 2s 3;
 }
 
-@keyframes backgroundChange {
+.pomodroido-relax-end-bg {
+    animation: relaxEndBg 2s 3;
+}
+
+@keyframes relaxEndBg {
     0% {
         background: initial;
     }
 
     50% {
         background: #F56C6C;
+    }
+
+    100% {
+        background: initial;
+    }
+}
+
+@keyframes workEndBg {
+    0% {
+        background: initial;
+    }
+
+    50% {
+        background: #abdcff;
     }
 
     100% {
