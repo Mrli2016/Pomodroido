@@ -1,4 +1,5 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
 const path = require("path");
 
@@ -30,6 +31,10 @@ const manifest =
 
 module.exports = {
   pages: pagesObj,
+
+  // 生产环境是否生成 sourceMap 文件
+  productionSourceMap: false,
+
   configureWebpack: {
     plugins: [
       new webpack.ProvidePlugin({
@@ -40,7 +45,7 @@ module.exports = {
         manifest,
         {
           from: path.resolve("src/styles/content.css"),
-          to: `${path.resolve("dist")}/styles/content.css`
+          to: `${path.resolve("dist")}/css/content.css`
         },
         {
           from: path.resolve("src/assets/icons"),
@@ -58,6 +63,20 @@ module.exports = {
     ],
     output: {
       filename: "js/[name].js"
+    },
+    optimization: {
+      minimizer: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              warnings: false,
+              drop_console: true, //console
+              drop_debugger: false,
+              pure_funcs: ['console.log'] //移除console
+            }
+          }
+        })
+      ]
     }
   },
   chainWebpack: config => {
