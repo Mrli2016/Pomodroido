@@ -1,5 +1,6 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const ZipPlugin = require('zip-webpack-plugin')
 const webpack = require('webpack')
 const path = require("path");
 
@@ -29,6 +30,42 @@ const manifest =
     to: `${path.resolve("dist")}/manifest.json`
   };
 
+let plugins = [
+  new webpack.ProvidePlugin({
+    $: "jquery",
+    jQuery: "jquery"
+  }),
+  CopyWebpackPlugin([
+    manifest,
+    {
+      from: path.resolve("src/styles/content.css"),
+      to: `${path.resolve("dist")}/css/content.css`
+    },
+    {
+      from: path.resolve("src/assets/icons"),
+      to: `${path.resolve("dist")}/assets/icons`
+    },
+    {
+      from: path.resolve("src/*.js"),
+      to: `${path.resolve("dist")}`
+    },
+  ]),
+  // // keep module.id stable when vendor modules does not change
+  // new webpack.HashedModuleIdsPlugin(),
+  // // enable scope hoisting
+  // new webpack.optimize.ModuleConcatenationPlugin(),
+]
+
+// 生产环境打包dist为zip
+if (process.env.NODE_ENV === 'production') {
+  plugins.push(
+    new ZipPlugin({
+      path: path.resolve("dist"),
+      filename: 'dist.zip',
+    })
+  )
+}
+
 module.exports = {
   pages: pagesObj,
 
@@ -36,31 +73,7 @@ module.exports = {
   productionSourceMap: false,
 
   configureWebpack: {
-    plugins: [
-      new webpack.ProvidePlugin({
-        $: "jquery",
-        jQuery: "jquery"
-      }),
-      CopyWebpackPlugin([
-        manifest,
-        {
-          from: path.resolve("src/styles/content.css"),
-          to: `${path.resolve("dist")}/css/content.css`
-        },
-        {
-          from: path.resolve("src/assets/icons"),
-          to: `${path.resolve("dist")}/assets/icons`
-        },
-        {
-          from: path.resolve("src/*.js"),
-          to: `${path.resolve("dist")}`
-        },
-      ]),
-      // // keep module.id stable when vendor modules does not change
-      // new webpack.HashedModuleIdsPlugin(),
-      // // enable scope hoisting
-      // new webpack.optimize.ModuleConcatenationPlugin(),
-    ],
+    plugins: plugins,
     output: {
       filename: "js/[name].js"
     },
