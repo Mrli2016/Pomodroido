@@ -1,3 +1,10 @@
+<!--
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-03 15:55:03
+ * @LastEditTime: 2019-08-12 10:59:35
+ * @LastEditors: Please set LastEditors
+ -->
 <template>
   <div class="main_app">
     <h3 class="text-primary">工作次数: {{ working_times}} </h3>
@@ -52,7 +59,7 @@
       <el-input-number
         size="mini"
         :min="0"
-        :max="60"
+        :max="999"
         :disabled="this.running"
         v-model="working_time"
       ></el-input-number>
@@ -62,7 +69,7 @@
       <el-input-number
         size="mini"
         :min="0"
-        :max="60"
+        :max="999"
         :disabled="this.running"
         v-model="relax_time"
       ></el-input-number>
