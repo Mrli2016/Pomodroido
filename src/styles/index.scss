@@ -1,56 +1,12 @@
 @import './variables.scss';
 @import './mixin.scss';
 
-body {
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
-}
-
 label {
   font-weight: 700;
 }
 
-html {
-  height: 100%;
-  box-sizing: border-box;
-}
-
 #app {
   height: 100%;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-}
-
-a,
-a:focus,
-a:hover {
-  cursor: pointer;
-  text-decoration: none;
-}
-
-a {
-  color: $primary;
-
-  &:focus,
-  &:hover {
-    color: $primary-dark;
-  }
-}
-
-div:focus {
-  outline: none;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
 }
 
 .pull {

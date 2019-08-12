@@ -3,8 +3,13 @@
     <h3 class="text-primary">工作次数: {{ working_times}} </h3>
     <div :class="{sandglass: true, working: working}">
       <span class="minute m-b-15">{{ minute }}</span>
+      <div
+        v-if="relaxing"
+        class="text-primary"
+        style="font-size: 14px;"
+      >休息中</div>
       <digit-roll
-        v-if="working"
+        v-else
         class="second"
         ref='digitroll'
         :rollDigits="second"
@@ -12,24 +17,34 @@
         :dur="500"
       >
       </digit-roll>
-      <div
-        v-else
-        class="text-primary"
-        style="font-size: 14px;"
-      >休息中</div>
     </div>
     <el-button-group class="m-t-15">
       <el-button
-        :type="this.working ? 'primary' : ''"
+        v-if="pausing"
+        type="success"
+        size="mini"
+        plain
+        @click="makeContinue"
+      >继续</el-button>
+      <el-button
+        v-if="!running"
+        type="primary"
         size="mini"
         plain
         @click="start"
       >开始</el-button>
       <el-button
+        v-if="working || relaxing"
+        type="warning"
+        size="mini"
+        plain
+        @click="pause"
+      >暂停</el-button>
+      <el-button
         type="danger"
         size="mini"
         plain
-        @click="reset"
+        @click="stop"
       >停止</el-button>
     </el-button-group>
     <div class="m-t-15">
@@ -65,46 +80,84 @@ export default {
   data() {
     return {
       background: window.chrome.extension.getBackgroundPage(),
+
       running: false,
+      pausing: false,
+      working: false,
+      relaxing: false,
+      pauseStatue: 'working',
+
       working_time: 25,
       relax_time: 5,
       minute: 0,
       second: 0,
-      end: false,
-      working: false,
+
       timer: null,
       working_times: 0
     }
   },
   watch: {
     running: function(val) {
-      if (val) {
-        this.timer = setInterval(() => {
-          this.refreshPomodroidoInfo()
-        }, 1000);
-      } else {
-        if (this.timer) clearInterval(this.timer)
-      }
+
+      if (val) this.run()
     }
   },
   methods: {
+    run() {
+      if (this.timer) clearInterval(this.timer)
+      this.timer = setInterval(() => {
+        this.refreshPomodroidoInfo()
+      }, 1000);
+    },
     start() {
-      this.background.start(this.working_time, this.relax_time)
+      if (!this.working_time) return
       this.running = true
       this.working = true
-      this.minute = this.minute || this.working_time
+      this.pausing = false
+      this.relaxing = false
+
+      this.background.start(this.working_time, this.relax_time)
+      this.minute = this.working_time
+      this.second = 0
+      this.run()
     },
-    reset() {
-      this.running = false
+    pause() {
+      if (this.timer) clearInterval(this.timer)
+      this.working ? this.pauseStatue = 'working' : this.pauseStatue = "relaxing"
+
+      this.pausing = true
       this.working = false
+      this.relaxing = false
+
+      this.background.pause()
+    },
+    makeContinue() {
+      if (this.pauseStatue === 'working') {
+        this.working = true
+      } else {
+        this.relaxing = true
+      }
+      this.pausing = false
+      this.run()
+      this.background.continue()
+    },
+    stop() {
+      if (this.timer) clearInterval(this.timer)
+
+      this.pausing = false
+      this.working = false
+      this.relaxing = false
       this.minute = this.working_time
       this.second = 0
 
-      this.background.reset()
+      this.running = false
+
+      this.background.stop()
+
       // 因组件渲染有延迟，需进行hack处理
-      setTimeout(() => {
+      this.$nextTick(() => {
         this.$refs.digitroll.setDigit(this.second)
-      }, 0);
+      })
     },
     refreshPomodroidoInfo() {
       this.background.pomodroidoInfo().then((info) => {

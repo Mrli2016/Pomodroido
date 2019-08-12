@@ -1,3 +1,6 @@
+@import './variables.scss';
+@import './index.scss';
+
 .pomodroido-work-end-bg {
     animation: workEndBg 2s 3;
 }
@@ -12,7 +15,7 @@
     }
 
     50% {
-        background: #F56C6C;
+        background: $danger;
     }
 
     100% {
@@ -26,7 +29,7 @@
     }
 
     50% {
-        background: #abdcff;
+        background: $primary;
     }
 
     100% {

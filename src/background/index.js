@@ -1,3 +1,10 @@
+/*
+ * @Description: In User Settings Edit
+ * @Author: your name
+ * @Date: 2019-06-03 15:55:03
+ * @LastEditTime: 2019-06-03 15:55:03
+ * @LastEditors: your name
+ */
 import {
   notification,
   getStorage,
@@ -18,6 +25,13 @@ window.chrome.runtime.onInstalled.addListener(function(details) {
     }) // 插件安装成功后添加欢迎页面
   } else if (details.reason == "update") {
     // 插件升级成功
+    notification(new Date().getTime().toString(), {
+      type: 'basic',
+      iconUrl: 'assets/icons/48.png',
+      title: '番茄钟升级成功！',
+      priority: 2,
+      message: '修复部分网页样式错乱问题'
+    }) // 插件安装成功后添加欢迎页面
   }
 });
 
@@ -37,7 +51,7 @@ window.start = function(working_time, relax_time) {
 
       notification(new Date().getTime().toString(), {
         type: 'basic',
-        iconUrl: 'assets/icons/48.png',
+        iconUrl: 'assets/icons/coffee.png',
         title: '休息时间到啦！',
         priority: 2,
         message: '先休息一下放松心情'
@@ -59,11 +73,22 @@ window.start = function(working_time, relax_time) {
       })
     }
   })
-  pomodroido.start()
+
+  pomodroido.work()
 }
 
-window.reset = function() {
-  if (pomodroido) pomodroido.reset()
+window.stop = function() {
+  if (pomodroido) {
+    pomodroido.stop()
+  }
+}
+
+window.pause = function() {
+  if (pomodroido) pomodroido.pause()
+}
+
+window.continue = function() {
+  if (pomodroido) pomodroido.continue()
 }
 
 window.pomodroidoInfo = function() {

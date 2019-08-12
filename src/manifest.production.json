@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
-    "name": "番茄钟（Pomodoro）- 劳逸结合提高工作效率",
+    "name": "番茄钟(Pomodoro)-劳逸结合提高工作效率",
     "short_name": "番茄工作法",
     "description": "番茄工作法是简单易行的时间管理方法，设一段约25分钟的时间专注工作，时间结束后短暂休息一下（5分钟就行），每4个番茄时段多休息一会儿。",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "icons": {
         "16": "assets/icons/16.png",
         "48": "assets/icons/48.png",
@@ -29,14 +29,14 @@
         "default_title": "番茄钟-劳逸结合提高工作效率"
     },
     "background": {
-        "page": "background.html"
+        "scripts": ["js/background.js"]
     },
     "content_scripts": [{
         "matches": ["<all_urls>"],
-        "js": ["js/content_script.js"],
+        "js": ["js/content.js"],
         "css": ["css/content.css"],
         "run_at": "document_end"
     }],
-    "web_accessible_resources": ["*", "*/*"],
+    "web_accessible_resources": ["vendor/*", "assets/*", "fonts/*"],
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

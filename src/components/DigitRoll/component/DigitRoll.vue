@@ -72,6 +72,7 @@ export default {
 
     return {
       digits: `${rollDigits}`,
+      cacheDigit: undefined,  // 如果滚动中想修改数字的话，想将数字缓存起来，滚动完成后再处理这个数字
       beforeDigits: '0',
       cellHeight: 0,
       maxDur: 0,
@@ -147,14 +148,22 @@ export default {
 
     getComplete(total) {
       let count = 0;
-      const vm = this;
-      return function completeRoll() {
+      return () => {
         if (++count >= total) {
-          vm.beforeDigits = `${vm.digits}`;
-          setTimeout(() => {
+          this.beforeDigits = `${this.digits}`;
+          if (typeof (this.cacheDigit) == "undefined") {
+            setTimeout(() => {
+              rollLock = false;
+              this.$emit('roll-finish');
+            }, 4);
+          } else {
             rollLock = false;
-            vm.$emit('roll-finish');
-          }, 4);
+            this.setDigit(this.cacheDigit)
+            this.cacheDigit = undefined
+          }
+          // if (!this.cacheDigit && this.cacheDigit != 0) {
+          // } else {
+          // }
         }
       };
     },
@@ -290,8 +299,10 @@ export default {
       const vm = this;
       let opts = null;
       if (rollLock) {
+        this.cacheDigit = digit // 缓存起来
         return;
       }
+
       /** formate opts */
       if (typeof digit === 'string' || typeof digit === 'number') {
         vm.digits = `${digit}`;
